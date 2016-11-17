@@ -5,7 +5,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by s401321 on 16/11/2016.
@@ -17,21 +16,21 @@ public class FormPrompt {
     private JPanel panel;
     private JList filelist;
     private JButton addFilesButton;
-    private static FormPrompt instance;
+    private JButton CLEARButton;
 
     private File path_open_dir = new File("./");
     private File path_save_dir = new File("./");
-    private HashSet<File> selectedFiles = new HashSet<>();
     private ArrayList<String> extensions = new ArrayList<>(Arrays.asList("png", "jpg", "jpeg"));
 
     public static void main(String[] args) {
-        instance = new FormPrompt();
-        JFrame frame = new JFrame("FormPrompt");
-        frame.setContentPane(instance.panel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setMinimumSize(new Dimension(500,500));
-        frame.pack();
-        frame.setVisible(true);
+        JFrame instance = new JFrame("FormPrompt");
+        PhotoLayout.inst_prompt = new FormPrompt();
+        PhotoLayout.form_prompt = instance;
+        instance.setContentPane(PhotoLayout.inst_prompt.panel);
+        instance.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        instance.setMinimumSize(new Dimension(500,500));
+        instance.pack();
+        instance.setVisible(true);
     }
 
     private void getSaveDir() {
@@ -42,6 +41,7 @@ public class FormPrompt {
         if (chooser.showOpenDialog(panel) == JFileChooser.APPROVE_OPTION) {
             path_save_dir = chooser.getSelectedFile();
             path_save_field.setText(path_save_dir.getAbsolutePath());
+            PhotoLayout.setSavePath(path_save_dir);
         }
     }
 
@@ -69,17 +69,21 @@ public class FormPrompt {
         });
         if (chooser.showOpenDialog(panel) == JFileChooser.APPROVE_OPTION) {
             path_open_dir =chooser.getCurrentDirectory();
-            selectedFiles.addAll(Arrays.stream(chooser.getSelectedFiles()).collect(Collectors.toSet()));
-            filelist.setListData(selectedFiles.toArray());
+            PhotoLayout.addImages(chooser.getSelectedFiles());
+            updateList();
         }
     }
 
-    private void editImage() {
-        FormEdit.init(selectedFiles);
+    public void updateList() {
+        filelist.setListData(PhotoLayout.getImages().toArray());
+    }
+
+    public void clearList() {
+        PhotoLayout.clearImages();
+        updateList();
     }
 
     public FormPrompt() {
-        path_save_field.setText(path_save_dir.getPath());
         path_save_prompt.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -95,7 +99,13 @@ public class FormPrompt {
         beginButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                editImage();
+                PhotoLayout.beginParse();
+            }
+        });
+        CLEARButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                clearList();
             }
         });
     }
