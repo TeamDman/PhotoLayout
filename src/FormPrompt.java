@@ -50,7 +50,6 @@ public class FormPrompt {
         chooser.setMultiSelectionEnabled(true);
         chooser.setCurrentDirectory(path_open_dir);
         chooser.setFileFilter(new FileFilter() {
-
             @Override
             public boolean accept(File f) {
                 if (f.isDirectory())
@@ -75,7 +74,9 @@ public class FormPrompt {
         }
     }
 
-
+    private void editImage() {
+        FormEdit.init(selectedFiles);
+    }
 
     public FormPrompt() {
         path_save_field.setText(path_save_dir.getPath());
@@ -89,6 +90,12 @@ public class FormPrompt {
             @Override
             public void mouseClicked(MouseEvent e) {
                 getFiles();
+            }
+        });
+        beginButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                editImage();
             }
         });
     }
