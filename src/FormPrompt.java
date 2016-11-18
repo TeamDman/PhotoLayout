@@ -17,6 +17,7 @@ public class FormPrompt {
     private JList filelist;
     private JButton addFilesButton;
     private JButton CLEARButton;
+    private JProgressBar prog;
 
     private File path_open_dir = new File("./");
     private File path_save_dir = new File("./");
@@ -45,7 +46,8 @@ public class FormPrompt {
         }
     }
 
-    private void getFiles() {JFileChooser chooser = new JFileChooser();
+    private void getFiles() {
+        JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setMultiSelectionEnabled(true);
         chooser.setCurrentDirectory(path_open_dir);
@@ -77,6 +79,9 @@ public class FormPrompt {
     public void updateList() {
         filelist.setListData(PhotoLayout.getImages().toArray());
     }
+    public void updateProgress(int progress) {
+		prog.setValue(progress);
+	}
 
     public void clearList() {
         PhotoLayout.clearImages();
