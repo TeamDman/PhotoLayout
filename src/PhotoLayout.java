@@ -60,7 +60,7 @@ public class PhotoLayout {
 						BufferedImage imgA = ImageIO.read(imagePair.fileA);
 						BufferedImage imgB = ImageIO.read(imagePair.fileB);
 
-						BufferedImage imgBuffer = new BufferedImage(1200, 1800, BufferedImage.TYPE_INT_ARGB);
+						BufferedImage imgBuffer = new BufferedImage(1200, 1800, BufferedImage.TYPE_INT_RGB);
 
 						AffineTransform topShift = buildTransform(imgA);
 						AffineTransform bottomShift = buildTransform(imgB);
@@ -73,8 +73,11 @@ public class PhotoLayout {
 						graphics.dispose();
 
 						String name = imagePair.fileA.getName().substring(0, 5) + imagePair.fileB.getName().substring(0, 5);
-						File output = new File(PhotoLayout.getSavePath().getAbsoluteFile() + File.separator + name + ".png");
-						ImageIO.write(imgBuffer, "png", output);
+						File output = new File(PhotoLayout.getSavePath().getAbsoluteFile() + File.separator + name + ".jpg");
+
+						ImageIO.write(imgBuffer, "JPEG", output);
+
+
 						if (index > 0) {
 							int prog = index * 100 / images.size();
 							inst_prompt.updateProgress(prog);

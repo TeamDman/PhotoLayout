@@ -79,6 +79,7 @@ public class FormPrompt {
     public void updateList() {
         filelist.setListData(PhotoLayout.getImages().toArray());
     }
+
     public void updateProgress(int progress) {
 		prog.setValue(progress);
 	}
