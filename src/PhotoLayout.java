@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class PhotoLayout {
     private static ArrayList<File> images = new ArrayList<>();
@@ -93,11 +94,6 @@ public class PhotoLayout {
             }
         };
         thread.start();
-        try {
-            Runtime.getRuntime().exec("explorer.exe " + PhotoLayout.getSavePath().getAbsoluteFile());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private static String buildName(File A, File B,String splitText) {
@@ -135,7 +131,7 @@ public class PhotoLayout {
         graphics.setClip(0,0,1200,900);
         graphics.translate(-dx, -dy);
         graphics.drawImage(image, trans, null);
-        graphics.translate(dx, -dy);
+        graphics.translate(dx, dy);
     }
 
     private static double getScale(int width, int height) {

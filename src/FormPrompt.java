@@ -20,6 +20,7 @@ public class FormPrompt {
     private JButton CLEARButton;
     private JProgressBar prog;
     private JTextField nameField;
+    private JButton openDestinationButton;
 
     private File path_open_dir = new File("./");
     private File path_save_dir = new File("./");
@@ -117,5 +118,15 @@ public class FormPrompt {
             }
         });
 
+        openDestinationButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    Runtime.getRuntime().exec("explorer.exe " + PhotoLayout.getSavePath().getAbsoluteFile());
+                } catch (Exception er) {
+                    er.printStackTrace();
+                }
+            }
+        });
     }
 }
