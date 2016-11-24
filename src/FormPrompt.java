@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -18,6 +19,7 @@ public class FormPrompt {
     private JButton addFilesButton;
     private JButton CLEARButton;
     private JProgressBar prog;
+    private JTextField nameField;
 
     private File path_open_dir = new File("./");
     private File path_save_dir = new File("./");
@@ -105,7 +107,7 @@ public class FormPrompt {
         beginButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                PhotoLayout.beginParse();
+                PhotoLayout.beginParse(nameField.getText());
             }
         });
         CLEARButton.addMouseListener(new MouseAdapter() {
@@ -114,5 +116,6 @@ public class FormPrompt {
                 clearList();
             }
         });
+
     }
 }

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -38,7 +39,7 @@ public class PhotoLayout {
         FormPrompt.main(args);
     }
 
-    public static void beginParse() {
+    public static void beginParse(String splitText) {
         if (path_save == null) {
             JPanel gui = new JPanel(new BorderLayout(3, 3));
             JLabel label = new JLabel();
@@ -46,11 +47,11 @@ public class PhotoLayout {
             gui.add(label);
             JOptionPane.showMessageDialog(null, gui);
         } else {
-            stitchImages();
+            stitchImages(splitText);
         }
     }
 
-    private static void stitchImages() {
+    private static void stitchImages(String splitText) {
         Thread thread = new Thread() {
             @Override
             public void run() {
@@ -70,10 +71,14 @@ public class PhotoLayout {
                         drawCentered(graphics, imgB);
                         graphics.dispose();
 
-                        String name = imagePair.fileA.getName().substring(0, 5) + imagePair.fileB.getName().substring(0, 5);
-                        File output = new File(PhotoLayout.getSavePath().getAbsoluteFile() + File.separator + name + ".jpg");
-
-                        ImageIO.write(imgBuffer, "JPEG", output);
+                        String name = buildName(imagePair.fileA,imagePair.fileB,splitText);
+                        try {
+                            File output = new File(PhotoLayout.getSavePath().getAbsoluteFile() + File.separator + name + ".jpg");
+                            ImageIO.write(imgBuffer, "JPEG", output);
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null,"Files failed to save, check that the split text is valid");
+                            break;
+                        }
 
 
                         if (index > 0) {
@@ -88,6 +93,20 @@ public class PhotoLayout {
             }
         };
         thread.start();
+        try {
+            Runtime.getRuntime().exec("explorer.exe " + PhotoLayout.getSavePath().getAbsoluteFile());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String buildName(File A, File B,String splitText) {
+        return chopExtension(A.getName())+ splitText + chopExtension(B.getName());
+    }
+
+    private static String chopExtension(String name) {
+        int i = name.lastIndexOf(".");
+        return i==-1?name:name.substring(0,i);
     }
 
     private static void drawCentered(Graphics2D graphics, BufferedImage image) {
@@ -113,6 +132,7 @@ public class PhotoLayout {
         height = (int) (height * scale);
         int dx = (width - 1200) / 2;
         int dy = (height - 900) / 2;
+        graphics.setClip(0,0,1200,900);
         graphics.translate(-dx, -dy);
         graphics.drawImage(image, trans, null);
         graphics.translate(dx, -dy);
