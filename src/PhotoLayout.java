@@ -4,17 +4,14 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class PhotoLayout {
-    private static ArrayList<File> images = new ArrayList<>();
-    private static File path_save;
-
     public static FormPrompt inst_prompt;
     public static JFrame form_prompt;
+	private static ArrayList<File> images = new ArrayList<>();
+	private static File path_save;
 
     public static File getSavePath() {
         return path_save;
@@ -35,6 +32,10 @@ public class PhotoLayout {
     public static void clearImages() {
         images.clear();
     }
+
+	public static void removeImages(Object[] list) {
+		images.removeAll(Arrays.asList(list));
+	}
 
     public static void main(String[] args) {
         FormPrompt.main(args);
@@ -90,10 +91,16 @@ public class PhotoLayout {
                         e.printStackTrace();
                     }
                 }
-                inst_prompt.updateProgress(0);
-            }
-        };
-        thread.start();
+				inst_prompt.updateProgress(100);
+				if (images.size() % 2 != 0) {
+					JOptionPane.showMessageDialog(form_prompt, "The list of images contained an odd number of elements, the image \"" + images.get(images.size() - 1).getName() + "\" was not processed.", "Warning", JOptionPane.ERROR_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(form_prompt, "The action was completed successfully.");
+				}
+				inst_prompt.updateProgress(0);
+			}
+		};
+		thread.start();
     }
 
     private static String buildName(File A, File B,String splitText) {
