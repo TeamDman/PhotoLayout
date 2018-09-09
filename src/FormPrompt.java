@@ -10,20 +10,19 @@ import java.util.Arrays;
  * Created by s401321 on 16/11/2016.
  */
 public class FormPrompt {
-	private JTextField path_save_field;
-	private JButton path_save_prompt;
-	private JButton beginButton;
-	private JPanel panel;
-	private JList filelist;
-	private JButton addFilesButton;
-	private JButton CLEARButton;
-	private JProgressBar prog;
-	private JTextField nameField;
-	private JButton openDestinationButton;
-
-	private File path_open_dir = new File("./");
-	private File path_save_dir = new File("./");
-	private ArrayList<String> extensions = new ArrayList<>(Arrays.asList("png", "jpg", "jpeg"));
+	private JButton           CLEARButton;
+	private JButton           addFilesButton;
+	private JButton           beginButton;
+	private ArrayList<String> extensions    = new ArrayList<>(Arrays.asList("png", "jpg", "jpeg"));
+	private JList             filelist;
+	private JTextField        nameField;
+	private JButton           openDestinationButton;
+	private JPanel            panel;
+	private File              path_open_dir = new File("./");
+	private File              path_save_dir = new File("./");
+	private JTextField        path_save_field;
+	private JButton           path_save_prompt;
+	private JProgressBar      prog;
 
 	private FormPrompt() {
 		path_save_prompt.addMouseListener(new MouseAdapter() {
@@ -81,22 +80,6 @@ public class FormPrompt {
 		});
 	}
 
-	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		JFrame instance = new JFrame("FormPrompt");
-		instance.setTitle("PhotoLayout Application");
-		PhotoLayout.inst_prompt = new FormPrompt();
-		PhotoLayout.form_prompt = instance;
-		instance.setContentPane(PhotoLayout.inst_prompt.panel);
-		instance.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		instance.pack();
-		instance.setVisible(true);
-	}
-
 	private void getSaveDir() {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -143,12 +126,28 @@ public class FormPrompt {
 		filelist.setListData(PhotoLayout.getImages().toArray());
 	}
 
-	public void updateProgress(int progress) {
-		prog.setValue(progress);
-	}
-
 	public void clearList() {
 		PhotoLayout.clearImages();
 		updateList();
+	}
+
+	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		JFrame instance = new JFrame("FormPrompt");
+		instance.setTitle("PhotoLayout Application");
+		PhotoLayout.inst_prompt = new FormPrompt();
+		PhotoLayout.form_prompt = instance;
+		instance.setContentPane(PhotoLayout.inst_prompt.panel);
+		instance.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		instance.pack();
+		instance.setVisible(true);
+	}
+
+	public void updateProgress(int progress) {
+		prog.setValue(progress);
 	}
 }
