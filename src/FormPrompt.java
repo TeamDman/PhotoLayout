@@ -3,6 +3,7 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -56,9 +57,9 @@ public class FormPrompt {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
-					Runtime.getRuntime().exec("explorer.exe " + PhotoLayout.getSavePath().getAbsoluteFile());
-				} catch (Exception er) {
-					er.printStackTrace();
+					java.awt.Desktop.getDesktop().open(PhotoLayout.getSavePath());
+				} catch (IOException ex) {
+					ex.printStackTrace();
 				}
 			}
 		});
