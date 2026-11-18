@@ -1,0 +1,24 @@
+[package]
+name = "photolayout"
+version = "0.1.0"
+edition = "2024"
+description = "Combine pairs of photos into printable JPEGs"
+
+[dependencies]
+color-eyre = "0.6.5"
+eyre = "0.6.12"
+directories-next = "2"
+facet = { package = "teamy-facet", version = "=0.50.0-rc.10" }
+figue = { package = "teamy-figue", version = "=6.0.0-rc.8" }
+eframe = { version = "0.33", default-features = false, features = ["default_fonts", "glow", "persistence", "wayland", "x11"] }
+image = { version = "0.25.9", default-features = false, features = ["jpeg", "png"] }
+open = "5"
+rfd = "0.15"
+rayon = "1.11"
+tempfile = "3"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61.2", features = ["Win32_System_LibraryLoader", "Win32_UI_WindowsAndMessaging"] }
+
+[build-dependencies]
+embed-resource = "3.0.6"
