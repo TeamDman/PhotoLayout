@@ -21,6 +21,7 @@ pub(super) struct PhotoLayoutApp {
     separator: String,
     batch: Option<Batch>,
     messages: Vec<String>,
+    results_folder: Option<PathBuf>,
 }
 
 impl PhotoLayoutApp {
@@ -34,6 +35,7 @@ impl PhotoLayoutApp {
             separator: "+".into(),
             batch: None,
             messages: Vec::new(),
+            results_folder: None,
         }
     }
 
@@ -91,6 +93,7 @@ impl PhotoLayoutApp {
             })
         });
         self.messages.clear();
+        self.results_folder = None;
         self.batch = Some(Batch {
             worker,
             progress,
@@ -120,6 +123,7 @@ impl PhotoLayoutApp {
                 self.messages.push(summary);
                 self.messages
                     .push(format!("Output folder: {}", report.output_dir.display()));
+                self.results_folder = Some(report.output_dir);
                 self.messages.extend(report.failures);
             }
             Ok(Err(error)) => self.messages.push(format!("{error:#}")),
@@ -256,6 +260,16 @@ impl eframe::App for PhotoLayoutApp {
             egui::ScrollArea::vertical()
                 .id_salt("results")
                 .show(ui, |ui| {
+                    if let Some(path) = &self.results_folder
+                        && ui
+                            .button("Open results folder")
+                            .on_hover_text(path.display().to_string())
+                            .clicked()
+                        && let Err(error) = open::that_detached(path)
+                    {
+                        self.messages
+                            .push(format!("Could not open {}: {error}", path.display()));
+                    }
                     for message in &self.messages {
                         ui.label(message);
                     }
